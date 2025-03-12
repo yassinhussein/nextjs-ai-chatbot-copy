@@ -18,6 +18,8 @@ import {
 } from './schema';
 import { ArtifactKind } from '@/components/artifact';
 
+
+
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
 // https://authjs.dev/reference/adapter/drizzle
@@ -94,12 +96,24 @@ export async function getChatsByUserId({ id }: { id: string }) {
   }
 }
 
+// if (id === "new") {
+//   console.error("Invalid UUID: 'new'");
+//   return null;
+// }
+
+import { isUUID } from '@/lib/utils'; // Create this helper if not exists
+
 export async function getChatById({ id }: { id: string }) {
+  if (!isUUID(id)) {
+    console.error(`Invalid UUID: '${id}'`);
+    return null; // Prevents crashing the DB query
+  }
+
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
     return selectedChat;
   } catch (error) {
-    console.error('Failed to get chat by id from database');
+    console.error('Failed to get chat by id from database', error);
     throw error;
   }
 }

@@ -18,7 +18,12 @@ export function cn(...inputs: ClassValue[]) {
 interface ApplicationError extends Error {
   info: string;
   status: number;
+
 }
+export function isUUID(id: string): boolean {
+  return /^[0-9a-fA-F-]{36}$/.test(id);
+}
+
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
